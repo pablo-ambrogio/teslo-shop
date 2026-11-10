@@ -1,6 +1,7 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ProductImage } from "./product-images.entity.js";
 
-@Entity()
+@Entity({ name: "products" })
 export class Product {
 
     @PrimaryGeneratedColumn('uuid')
@@ -49,6 +50,13 @@ export class Product {
     tags: string[]
 
 
+    @OneToMany(
+        () => ProductImage, // Va a regregar un ProducImage
+        (productImage) => productImage.product, // como se relaciona con la tabla de ProductImage
+        { cascade: true, eager: true }
+    )
+    images?:  ProductImage[];
+
 
     // Antes de insertar en la bd hace este chequeo
     @BeforeInsert()
@@ -67,7 +75,7 @@ export class Product {
     @BeforeUpdate()
     checkSlugUpdate() {
         
-        if( this.slug ) {
+        if( !this.slug ) {       
             this.slug = this.title
         }
         

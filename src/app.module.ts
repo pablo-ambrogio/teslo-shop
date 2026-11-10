@@ -4,6 +4,7 @@ import { createObserveModule } from '@nestjs/observe';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module.js';
 import { CommonModule } from './common/common.module.js';
+import { SeedModule } from './seed/seed.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -29,7 +30,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       synchronize: true
     }),
     ProductsModule,
-    CommonModule
+    CommonModule,
+    SeedModule
   ],
   controllers: [],
   providers: [],
