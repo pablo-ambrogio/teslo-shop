@@ -1,10 +1,14 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { createObserveModule } from '@nestjs/observe';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
 import { ProductsModule } from './products/products.module.js';
 import { CommonModule } from './common/common.module.js';
 import { SeedModule } from './seed/seed.module.js';
+import { FilesModule } from './files/files.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -18,7 +22,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',
       serviceId: 'teslo-shop',
     }),
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({}),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -29,9 +33,15 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       autoLoadEntities: true,
       synchronize: true
     }),
+
+    ServeStaticModule.forRoot({
+      rootPath: join( process.cwd(), 'public' ),
+    }),
+
     ProductsModule,
     CommonModule,
-    SeedModule
+    SeedModule,
+    FilesModule
   ],
   controllers: [],
   providers: [],

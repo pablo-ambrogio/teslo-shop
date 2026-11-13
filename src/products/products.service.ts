@@ -1,12 +1,15 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { DataSource, QueryRunner, Repository } from 'typeorm';
+import { validate as isUUID } from 'uuid'
+
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
-import { Product } from './entities/product.entity.js';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
-import { PaginationDto } from '../common/dtos/pagination.dto.js';
-import { validate as isUUID } from 'uuid'
+
 import { ProductImage } from './entities/product-images.entity.js';
+import { Product } from './entities/product.entity.js';
+import { PaginationDto } from '../common/dtos/pagination.dto.js';
 
 @Injectable()
 export class ProductsService {
@@ -23,7 +26,8 @@ export class ProductsService {
     private readonly productImageRepository: Repository< ProductImage >,
 
     //Inyectamos la conexión de la base de datos
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
+
 
   ){}
 
@@ -76,7 +80,6 @@ export class ProductsService {
         images: true
       }
     });
-
     return products.map( ({ images, ...rest }) => ({
       ...rest,
       images: images?.map( ({ url }) => url )
@@ -186,7 +189,6 @@ export class ProductsService {
 
     throw new InternalServerErrorException('Unexpected error, check server logs!');
   }
-
 
   async deleteAllProducts() {
     const query = this.productRepository.createQueryBuilder("product");
