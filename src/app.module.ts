@@ -9,6 +9,7 @@ import { ProductsModule } from './products/products.module.js';
 import { CommonModule } from './common/common.module.js';
 import { SeedModule } from './seed/seed.module.js';
 import { FilesModule } from './files/files.module.js';
+import { AuthModule } from './auth/auth.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -41,7 +42,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ProductsModule,
     CommonModule,
     SeedModule,
-    FilesModule
+    FilesModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
