@@ -10,6 +10,7 @@ import { UpdateProductDto } from './dto/update-product.dto.js';
 import { ProductImage } from './entities/product-images.entity.js';
 import { Product } from './entities/product.entity.js';
 import { PaginationDto } from '../common/dtos/pagination.dto.js';
+import { User } from '../auth/entities/user.entity.js';
 
 @Injectable()
 export class ProductsService {
@@ -31,7 +32,7 @@ export class ProductsService {
 
   ){}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
   
     try {
 
@@ -54,7 +55,8 @@ export class ProductsService {
       // Crea la instancia del producto **NO** lo guarda en la base de datos
       const product = this.productRepository.create({
         ...productDetails,
-        images: images.map( image => this.productImageRepository.create( { url: image } ) )
+        images: images.map( image => this.productImageRepository.create( { url: image } ) ),
+        user
       });
 
       // Guardar e impactar en la bd
@@ -119,7 +121,7 @@ export class ProductsService {
     }
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User) {
 
     const { images, ...toUpdate } = updateProductDto;
 
@@ -152,6 +154,8 @@ export class ProductsService {
 
       } 
 
+      // Le decimos que mantenga el usuario que esta haciendo la actualización
+      product.user = user;
       // Acá intenta guardalo ( Puede fallar )
       await queryRunner.manager.save( product );
 
